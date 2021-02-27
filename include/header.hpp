@@ -98,8 +98,7 @@ void create_hash(std::vector<Info_hash> &for_out, int &number, std::mutex &mtx)
           mtx.unlock();
         }
       }
-    } else
-    {
+    } else {
       k = false;
       BOOST_LOG_TRIVIAL(trace) << std ::endl
                                << "!found value [" << input_rand
