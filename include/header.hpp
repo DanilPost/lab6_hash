@@ -4,6 +4,7 @@
 #define INCLUDE_HEADER_HPP_
 
 #include <iostream>
+#include <vector>
 #include <csignal>
 #include <fstream>
 #include <string>
@@ -63,11 +64,11 @@ void create_hash(std::vector<Info_hash> &for_out, int &number, std::mutex &mtx)
   bool k = true;
   auto start = std::chrono::high_resolution_clock::now();
   auto finish = std::chrono::high_resolution_clock::now();
-  while(a)
+  while (a)
   {
     std::string input_rand = std::to_string(std::rand());
     std::string hash_key = picosha2::hash256_hex_string(input_rand);
-    if(k)
+    if (k)
     {
       start = std::chrono::high_resolution_clock::now();
     }
@@ -79,9 +80,9 @@ void create_hash(std::vector<Info_hash> &for_out, int &number, std::mutex &mtx)
       int r_time = std::chrono::duration_cast<std::chrono::microseconds>
           (finish - start).count();
       bool m = true;
-      while(m)
+      while (m)
       {
-        if(mtx.try_lock())
+        if (mtx.try_lock())
         {
           m = false;
           BOOST_LOG_TRIVIAL(info) << std::endl
@@ -97,8 +98,7 @@ void create_hash(std::vector<Info_hash> &for_out, int &number, std::mutex &mtx)
           mtx.unlock();
         }
       }
-    }
-    else
+    } else
     {
       k = false;
       BOOST_LOG_TRIVIAL(trace) << std ::endl
@@ -113,7 +113,7 @@ void exit_f(std::vector<Info_hash> &for_out, int &number)
 {
   std::ofstream fout("JSON.json");
   fout << "{" << std::endl <<  "\"items:\": [" << std::endl << std::endl;
-  for(int i = 0; i<number;i++)
+  for (int i = 0; i < number; i++)
   {
     fout << "  {" << std::endl;
     fout << "    \"time\": " <<for_out[i].time << "," << std::endl
