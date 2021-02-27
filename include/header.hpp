@@ -34,7 +34,7 @@ void sig_handler_exit(int sig)
 void init_log()
 {
   boost::log::register_simple_formatter_factory
-      <boost::log::trivial::severity_level,char>("Severity");
+      <boost::log::trivial::severity_level, char>("Severity");
   const std::string format =
       "[%TimeStamp%][%Severity%][%ThreadID%]: %Message%";
 
@@ -54,7 +54,6 @@ void init_log()
   boost::log::add_common_attributes();
 
   srand(time(nullptr));
-
 }
 
 void create_hash(std::vector<Info_hash> &for_out, int &number, std::mutex &mtx)
@@ -64,7 +63,8 @@ void create_hash(std::vector<Info_hash> &for_out, int &number, std::mutex &mtx)
   bool k = true;
   auto start = std::chrono::high_resolution_clock::now();
   auto finish = std::chrono::high_resolution_clock::now();
-  while(a) {
+  while(a)
+  {
     std::string input_rand = std::to_string(std::rand());
     std::string hash_key = picosha2::hash256_hex_string(input_rand);
     if(k)
