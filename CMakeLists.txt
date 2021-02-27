@@ -26,8 +26,11 @@ string(APPEND CMAKE_CXX_FLAGS " -pedantic -Werror -Wall -Wextra")
 string(APPEND CMAKE_CXX_FLAGS " -Wno-unused-command-line-argument")
 string(APPEND CMAKE_CXX_FLAGS " -Wshadow -Wnon-virtual-dtor")
 
+hunter_add_package(Boost COMPONENTS filesystem log system thread)
 hunter_add_package(GTest)
 find_package(GTest CONFIG REQUIRED)
+find_package(Boost CONFIG REQUIRED filesystem log log_setup system thread)
+find_package(Threads)
 
 add_library(${PROJECT_NAME} STATIC
   # enum your files and delete this comment
@@ -39,11 +42,26 @@ add_executable(demo
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-  "$<INSTALL_INTERFACE:include>"
-)
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+        "$<BUILD_INTERFACE:${Boost_INCLUDE_DIR}>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/third-party/PicoSHA2>"
+        "$<INSTALL_INTERFACE:include>"
+        )
 
-target_link_libraries(demo ${PROJECT_NAME})
+
+target_link_libraries(${PROJECT_NAME} ${Boost_LOG_SETUP_LIBRARY}
+        ${Boost_LOG_LIBRARY}
+        ${Boost_FILESYSTEM_LIBRARY}
+        ${Boost_THREAD_LIBRARY}
+        ${Boost_SYSTEM_LIBRARY}
+        Boost::log_setup
+        Boost::log
+        Boost::thread
+        Boost::filesystem
+        Boost::system
+        )
+
+target_link_libraries( demo ${PROJECT_NAME} )
 
 if(BUILD_TESTS)
   add_executable(tests
